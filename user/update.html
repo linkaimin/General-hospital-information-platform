@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet" type="text/css" />
+</head>
+<body style="margin: 30px">
+     
+         省：<input id='province' style="width:90px;margin:5px";/>市：<input style="width:90px;margin:5px" id='city'/>医院：<input style="width:90px;margin:5px" id='hospital'/>科室：<input id="room" style="width:90px;margin:5px"/><br/>
+         日期：<input style="width:200px" name="start" type="date" id="date" value="">增加病人数：<input style="width:90px;margin:5px" id='incPatient'/>病人总数：<input style="width:90px;margin:5px" id='sumPatient'/>增加收入：<input style="width:90px;margin:5px" id='incMoney'/><br/>
+         总收入：<input style="width:90px;margin:5px" id='sumMoney'/>电话：<input style="width:90px;margin:5px" id='phone'/>姓名：<input style="width:90px;margin:5px" id='name'/>录入人：<input style="width:90px;margin:5px" id='tag'/><br/>
+        
+        
+         <input type="file" id="file" name="file"/>
+         <button id="button"style="display:block;margin:0 auto;" name="">上传</button>
+        </body>
+<script src="../js/jquery-1.11.0.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script>
+     $(function() {
+ var loc = location.href;//获取整个跳转地址内容，其实就是你传过来的整个地址字符串
+ console.log("我的地址"+loc);
+ var n1 = loc.length;//地址的总长
+ var n2 = loc.indexOf("?");//取得=号的位置
+ var parameter = decodeURI(loc.substr(n2+1, n1-n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
+ var parameters  = parameter.split("&");//从&处拆分，返回字符串数组
+ console.log("参数列表"+parameters);
+ var paValue = new Array();//创建一个用于保存具体值得数组
+ for (var i = 0; i < parameters.length; i++) {
+     console.log("参数键值对值"+i+":"+parameters[i]);
+     var m1 = parameters[i].length;//获得每个键值对的长度
+     var m2 = parameters[i].indexOf("=");//获得每个键值对=号的位置
+     var value = parameters[i].substr(m2+1, m1-m2);//获取每个键值对=号后面具体的值
+     paValue[i] = value;
+
+ }
+ $(function () {
+    $("#button").click(function () {
+        var doctor=JSON.stringify({
+   systemId:paValue[0],
+   docHospital:$("#hospital").val(),
+   docProvince:$("#province").val(),
+   docCity:$("#city").val(),
+   docRoom:$("#room").val(),
+   docDate:$("#date").val(),
+   docPhone:$("#phone").val(),
+   docName:$("#name").val(),
+   docTag:$("#tag").val(),
+   docSumMoney:$("#sumMoney").val(),
+   docIncMoney:$("#incMoney").val(),
+   docSumPatient:$("#sumPatient").val(),
+   docIncPatient:$("#incPatient").val(),
+  })
+        //构建formData
+        var formData = new FormData();
+        //文件部分
+        var file = document.getElementById("file").files[0];
+        formData.append("file", file);
+        //json部分
+
+        //这里包装 可以直接转换成对象
+        formData.append('doctor', new Blob([doctor], {type: "application/json"}));
+
+        $.ajax({
+            url: "http://192.168.1.204:9090/doctor",
+            type: "PUT",
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            data: formData,
+            headers:{token:paValue[1]},
+            success: function (response) {
+                alert('上传成功！');
+                setTimeout(() => {
+                    window.close();
+                }, 300);
+            },
+            error: function () {
+                alert('上传失败！');
+
+            }
+        });
+    });
+})
+
+     })
+</script>
+</html>

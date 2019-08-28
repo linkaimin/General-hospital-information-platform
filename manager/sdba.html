@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>登录页</title>
+
+    <!-- Bootstrap -->
+    <link href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="../css/eys_stly.css" rel="stylesheet" type="text/css" />
+    <link href="../css/bootstrap-table.css" rel="stylesheet" type="text/css" />
+</head>
+   
+  </head>
+  <div class="index2">
+        
+        <h3 id="place" style="line-height:20px;color:hsl(204, 21%, 52%);">用户身份：市场人员(数据管理)</h3> 
+        
+        <form id="form" >
+        
+                <p id="p" class="p_line" style="text-align: center;" >
+                    <text>省：</text><select class="form-control"  name="province" id="province">
+                        <c:forEach var="item" items="${statenums}">
+                                <option value="${item.num}">${item.name}</option>
+                            </c:forEach>                    
+             
+                    </select>
+                  
+                    <text>市：</text><select class="form-control"  name="city" id="city">
+                        <c:forEach var="item" items="${statenums}">
+                                <option value="${item.num}">${item.name}</option>
+                            </c:forEach>                    
+             
+                    </select>
+                  
+                       <text>医院：</text><select class="form-control"  name="hospital" id="hospital">
+                            <c:forEach var="item" items="${statenums}">
+                                    <option value="${item.num}">${item.name}</option>
+                                </c:forEach>                    
+                 
+                        </select>
+                        <text>科室：</text><select class="form-control"  name="room" id="room">
+                            <c:forEach var="item" items="${statenums}">
+                                    <option value="${item.num}">${item.name}</option>
+                                </c:forEach>                    
+                 
+                        </select>
+                       
+                        <br/>
+                        <text>电话：</text><input id='phone'/>                    
+                 
+                        </select>
+                        <text>姓名：</text><input id='name'/>                 
+                 
+                        </select>
+                        <text>市场人员：</text><input id='tag'/>
+                        <text>添加日期(开始)：</text><input style="width:200px" name="start" type="date" id="start" value="">
+                        <text>添加日期(结束)：</text><input style="width:200px" name="end" type="date" id="end" value="">
+                      <button type="button" id="btn" class="button_style" style="background-color:hsl(204, 21%, 52%)">查询</button>
+                      <button type="button" onclick='addId()' class="button_style" style="background-color:hsl(204, 21%, 52%)">增加</button>
+                    </p>
+                </form>
+                
+             <table  id="table" style="margin: 0 auto">
+                </table>
+        
+        </div>
+        <table
+        id="table"
+        data-toolbar="#toolbar"
+        data-search="true"
+        data-show-refresh="true"
+        data-show-toggle="true"
+        data-show-fullscreen="true"
+        data-show-columns="true"
+        data-detail-view="true"
+        data-show-export="true"
+        data-click-to-select="true"
+        data-minimum-count-columns="2"
+        data-show-pagination-switch="true"
+        data-pagination="true"
+        data-id-field="id"
+        data-page-list="[10, 25, 50, 100, all]"
+        data-show-footer="true"
+        data-side-pagination="server"
+        >
+      </table>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+
+
+   
+   <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+   <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+   <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table-locale-all.min.js"></script>
+   <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/extensions/export/bootstrap-table-export.min.js"></script>
+
+
+ 
+
+</body>
+<script>  
+   
+        
+    $(function() {
+ var loc = location.href;//获取整个跳转地址内容，其实就是你传过来的整个地址字符串
+ console.log("我的地址"+loc);
+ var n1 = loc.length;//地址的总长
+ var n2 = loc.indexOf("?");//取得=号的位置
+ var parameter = decodeURI(loc.substr(n2+1, n1-n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
+ var parameters  = parameter.split("&");//从&处拆分，返回字符串数组
+ console.log("参数列表"+parameters);
+ var paValue = new Array();//创建一个用于保存具体值得数组
+ for (var i = 0; i < parameters.length; i++) {
+     console.log("参数键值对值"+i+":"+parameters[i]);
+     var m1 = parameters[i].length;//获得每个键值对的长度
+     var m2 = parameters[i].indexOf("=");//获得每个键值对=号的位置
+     var value = parameters[i].substr(m2+1, m1-m2);//获取每个键值对=号后面具体的值
+     paValue[i] = value;
+     console.log("参数值"+i+":"+value);
+ }
+
+ addId = function(){
+
+    window.open ("add.html?token="+paValue, "增加页面", "height=600, width=800, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no")
+
+ }
+ gly = function(){
+    window.location.href="sgly.html?id="+paValue;
+ }
+ yy = function(){
+    window.location.href="shospital.html?id="+paValue;
+ }
+ scry = function(){
+    window.location.href="snormal.html?id="+paValue;
+ }
+ window.operateEvents = {
+ 
+ // 点击修改按钮执行的方法
+ 'click #btn_edit': function (e, value, row, index) {
+    window.open ("update.html?id="+row.systemId+"&token="+paValue, "修改页面", "height=600, width=800, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no")
+    var temp=JSON.stringify({
+ hospital:'',
+ province:'',
+ city:'',
+ room:'',
+ createTime:'',
+ endTime:'',
+ phone:'',
+ name:'',
+ tag:'',
+})
+ console.log(temp)       
+  
+         $.ajax({
+             url: "http://192.168.1.204:9090/search",
+             type:"POST",
+             data: temp,
+             dataType: "JSON",
+             headers:{token:paValue},
+             contentType:'application/json',    
+                     // 这里把表单里面的数据放在这里传到后台
+             error:function(res){
+                 console.log(res.data);
+                 alert("error")
+             }  ,
+             success:function(res){
+                
+                 $("#table").bootstrapTable('load', res.data);
+             }
+         })
+
+             },
+  
+ 
+
+ // 点击删除按钮执行的方法
+ 'click #btn_delete': function (e, value, row, index) {
+     console.log(row.systemId)
+    $.ajax({
+             url: "http://192.168.1.204:9090/doctor/"+row.systemId,
+             type:"DELETE",
+             dataType: "JSON",
+             contentType:'application/json',
+             headers:{token:paValue},
+            
+             error:function(res){
+                alert("删除失败！")
+               
+             }  ,
+             success:function(res){
+                 alert("删除成功！")
+                 var temp=JSON.stringify({
+ hospital:'',
+ province:'',
+ city:'',
+ room:'',
+ createTime:'',
+ endTime:'',
+ phone:'',
+ name:'',
+ tag:'',
+})
+ console.log(temp)       
+  
+         $.ajax({
+             url: "http://192.168.1.204:9090/search",
+             type:"POST",
+             data: temp,
+             dataType: "JSON",
+             headers:{token:paValue},
+             contentType:'application/json',    
+                     // 这里把表单里面的数据放在这里传到后台
+             error:function(res){
+                 console.log(res.data);
+                 alert("error")
+             }  ,
+             success:function(res){
+                
+                 $("#table").bootstrapTable('load', res.data);
+             }
+         })
+
+             }
+    })
+ }
+ }
+ $.ajax({
+             url: "http://192.168.1.204:9090/info-province",
+             type:"GET",
+             dataType: "JSON",
+             contentType:'application/json',
+             headers:{token:paValue},
+             error:function(res){
+                 console.log(res.data);
+               
+             }  ,
+             success:function(res){
+                 $("#province").empty();
+                $("#province").append("<option value=''>请选择省</option>");
+               for(var i=0;i<res.data.length;i++){
+              $("#province").append('<option value='+res.data[i]+'>'+res.data[i]+'</option>');
+             }
+             $("#province").click(function(){
+                console.log($("#province")[0].value)
+             $.ajax({
+             url: "http://192.168.1.204:9090/info-city",
+             type:"POST",
+             dataType: "JSON",
+             contentType:'application/json',
+             headers:{token:paValue},
+             data:JSON.stringify({
+                 province:$("#province")[0].value
+                 }),
+             error:function(res){
+               
+               
+             }  ,
+             success:function(res){
+                 $("#city").empty();
+                $("#city").append("<option value=''>请选择市</option>");
+               for(var i=0;i<res.data.length;i++){
+              $("#city").append('<option value='+res.data[i]+'>'+res.data[i]+'</option>');
+             }
+             $("#city").click(function(){
+                console.log($("#city")[0].value)
+             $.ajax({
+             url: "http://192.168.1.204:9090/info-hospital",
+             type:"POST",
+             dataType: "JSON",
+             contentType:'application/json',
+             headers:{token:paValue},
+             data:JSON.stringify({
+                 city:$("#city")[0].value
+                 }),
+             error:function(res){
+               
+               
+             }  ,
+             success:function(res){
+                 $("#hospital").empty();
+                $("#hospital").append("<option value=''>请选择医院</option>");
+               for(var i=0;i<res.data.length;i++){
+              $("#hospital").append('<option value='+res.data[i]+'>'+res.data[i]+'</option>');
+             }
+             $("#hospital").click(function(){
+                console.log($("#hospital")[0].value)
+             $.ajax({
+             url: "http://192.168.1.204:9090/info-room",
+             type:"POST",
+             dataType: "JSON",
+             contentType:'application/json',
+             headers:{token:paValue},
+             data:JSON.stringify({
+                 hospital:$("#hospital")[0].value
+                 }),
+             error:function(res){
+               
+               
+             }  ,
+             success:function(res){
+                 $("#room").empty();
+                $("#room").append("<option value=''>请选择科室</option>");
+               for(var i=0;i<res.data.length;i++){
+              $("#room").append('<option value='+res.data[i]+'>'+res.data[i]+'</option>');
+             }
+             }
+               })
+             })
+             }
+               })
+             })
+             }
+               })
+             })
+             }
+               })
+               
+               $.ajax({
+             url: "http://192.168.1.204:9090/info-city",
+             type:"POST",
+             dataType: "JSON",
+             contentType:'application/json',
+             headers:{token:paValue},
+             error:function(res){
+                 console.log(res.data);
+               
+             }  ,
+             success:function(res){
+                 $("#city").empty();
+                $("#city").append("<option value=''>请选择市</option>");
+               for(var i=0;i<res.data.length;i++){
+              $("#city").append('<option value='+res.data[i]+'>'+res.data[i]+'</option>');
+             }
+             }
+               })
+               $.ajax({
+             url: "http://192.168.1.204:9090/info-hospital",
+             type:"POST",
+             dataType: "JSON",
+             contentType:'application/json',
+             headers:{token:paValue},
+             error:function(res){
+                 console.log(res.data);
+               
+             }  ,
+             success:function(res){
+                 $("#hospital").empty();
+                $("#hospital").append("<option value=''>请选择医院</option>");
+               for(var i=0;i<res.data.length;i++){
+              $("#hospital").append('<option value='+res.data[i]+'>'+res.data[i]+'</option>');
+             }
+             }
+               })
+               $.ajax({
+             url: "http://192.168.1.204:9090/info-room",
+             type:"POST",
+             dataType: "JSON",
+             contentType:'application/json',
+             headers:{token:paValue},
+             error:function(res){
+                 console.log(res.data);
+               
+             }  ,
+             success:function(res){
+                 $("#room").empty();
+                $("#room").append("<option value=''>请选择科室</option>");
+               for(var i=0;i<res.data.length;i++){
+              $("#room").append('<option value='+res.data[i]+'>'+res.data[i]+'</option>');
+             }
+             }
+               })
+               
+$("#btn").click(function(){
+
+var temp=JSON.stringify({
+ docHospital:$("#hospital")[0].value,
+ docProvince:$("#province")[0].value,
+ docCity:$("#city")[0].value,
+ docRoom:$("#room")[0].value,
+ docCreateTime:$("#start").val(),
+ docEndTime:$("#end").val(),
+ docPhone:$("#phone").val(),
+ docName:$("#name").val(),
+ docTag:$("#tag").val(),
+})
+ console.log(temp)       
+  
+         $.ajax({
+             url: "http://192.168.1.204:9090/search",
+             type:"POST",
+             data: temp,
+             dataType: "JSON",
+             headers:{token:paValue},
+             contentType:'application/json',    
+                     // 这里把表单里面的数据放在这里传到后台
+             error:function(res){
+                 console.log(res.data);
+                 alert("error")
+             }  ,
+             success:function(res){
+                
+                 $("#table").bootstrapTable('destroy'); 
+                 $('#table').bootstrapTable({
+            data:res.data,
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortOrder: "asc",                   //排序方式
+            sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                       //初始化加载第一页，默认第一页
+            pageSize: 5,                       //每页的记录行数（*）
+            pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）      
+            minimumCountColumns: 2,             //最少允许的列数
+            uniqueId: "systemId",              
+
+                 columns: [
+                                     
+                     {
+                         title: '省',
+                         field: 'province',
+                         align: 'center'
+                     },
+                     {
+                         title: "市",
+                         field: 'city',
+                         align: 'center',
+                         valign: 'middle'
+                     }, 
+                     {
+                         title: "医院",
+                         field: 'hospital',
+                         align: 'center',
+                         valign: 'middle'
+                     }, 
+                     {
+                         title: "科室",
+                         field: 'room',
+                         align: 'center',
+                         valign: 'middle'
+                     },
+                     
+                     {
+                         title: "日期",
+                         field: 'date',
+                         align: 'center',
+                         valign: 'middle'
+                     },
+                     {
+                         title: '增加病人数',
+                         field: 'incPatient',
+                         align: 'center',
+                         valign: 'middle'
+                     },
+                     {
+                         title: '病人总数',
+                         field: 'sumPatient',
+                         align: 'center'
+                     },
+                     {
+                         title: '增加收入',
+                         field: 'incMoney',
+                         align: 'center'
+                     },
+                     {
+                         title: '总收入',
+                         field: 'sumMoney',
+                         align: 'center'
+                     },
+                     {
+                         title: '电话',
+                         field: 'phone',
+                         align: 'center'
+                     },
+                      {
+                         title: "姓名",
+                         field: 'name',
+                         align: 'center',
+                         valign: 'middle'
+                     },
+                     {
+                         title: "录入人",
+                         field: 'tag',
+                         align: 'center',
+                         valign: 'middle'
+                     },{
+                         title: "编号",
+                         field: 'systemId',
+                         align: 'center',
+                         valign: 'middle'
+                     },
+                     {
+                     field: 'operation',
+                     title: '操作',
+                     align: 'center',
+                     valign: 'middle',
+                     events: operateEvents,
+                    formatter: addFunctionAlty
+                 }
+
+                 ]
+                 
+             }); 
+                 
+             function addFunctionAlty(value, row, index) {
+    return [
+        '<button id="btn_edit" class="btn btn-warning" >修改</button>  ',
+        '<button id="btn_delete" class="btn btn-warning">删除</button>'
+    ].join('');
+}
+
+
+}
+
+
+             
+             })
+         
+})
+      
+
+
+})
+ 
+ </script> 
+</html>

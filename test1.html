@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>登录页</title>
+
+    <!-- Bootstrap -->
+    <link href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/eys_stly.css" rel="stylesheet" type="text/css" />
+    <link href="css/bootstrap-table.css" rel="stylesheet" type="text/css" />
+
+    <!--<script>
+        /*function validateForm() {
+            var x = document.forms["myForm"]["fname"].value;
+            if (x == "") {
+            alert("必须填写姓名！");
+            return false;
+            }
+        }*/
+        function setCookie(cname,cvalue,exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires=" + d.toGMTString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+        }
+
+        function checkCookie() {
+        var user=getCookie("username");
+        if (user != "") {
+            alert("再次欢迎您，" + user);
+        } else {
+            user = prompt("请输入姓名：","");
+            if (user != "" && user != null) {
+            setCookie("username", user, 30);
+            }
+        }
+        }
+    </script>-->
+</head>
+<body>
+    <h1>设置文本内容</h1>
+    <h2 id="01">Hello China!</h2>
+    <h2 id="02">Hello World!</h2>
+    <script>
+        $(document).ready(function() {
+            var myElement = $("#02");
+            myElement.text("Hello Shanghai!");
+        });
+    </script>
+    <p id="demo1">一个段落</p>
+    <button type="button" onclick="setCookie()">设置cookie</button>
+    <button type="button" onclick="getCookie()">获取cookie</button>
+    <!--<form name="myForm" action="/demo/action_page.php" onsubmit="return validateForm()" method="post">
+        姓名：<input type="text" name="fname">
+        <input type="submit" value="提交">
+    </form>-->
+
+    
+<!--
+<h1>我的第一张网页</h1>
+
+<p>我的第一个段落</p>
+
+<p id="demo"></p>
+<p id="demo1">一个段落</p>
+<button type="button" onclick="myfunction()">try a try</button>
+
+<script>
+
+    var text = '{ "employees" : [' +
+        '{ "firstName":"Bill" , "lastName":"Gates" },' +
+        '{ "firstName":"Steve" , "lastName":"Jobs" },' +
+        '{ "firstName":"Alan" , "lastName":"Turing" } ]}';
+    obj = JSON.parse(text);
+    var employee1 = obj.employees[1];
+    document.getElementById("demo1").innerHTML = obj.employees[1].firstName + " " + obj.employees[1].lastName;
+    function myfunction() {
+        document.getElementById("demo").innerHTML = 5 + 6;
+    }
+    function myfunction1() {
+        document.getElementById("demo1").innerHTML = "aaaa" + 5 + 6;
+    }
+    // document.getElementById("demo1").innerHTML = "aaaa" + 5 + 6;
+</script>
+-->
+</body>
+</html> 

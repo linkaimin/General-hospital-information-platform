@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet" type="text/css" />
+</head>
+<body style="margin: 30px">
+    <div class="input-group" style="text-align: center">
+        <span class="input-group-addon">省：</span>
+        <input id='province' style="width:180px;margin:5px;" type="text" class="form-control" placeholder="黑龙江省"/>
+    </div>
+        
+    <div class="input-group" style="text-align: center">
+        <span class="input-group-addon">市：</span>
+        <input id='city' style="width:180px;margin:5px" type="text" class="form-control" placeholder="哈尔滨市"/>
+    </div>
+    <div class="input-group" style="text-align: center">
+        <span class="input-group-addon">医院：</span>
+        <input id='hospital' style="width:180px;margin:5px" type="text" class="form-control" placeholder="哈尔滨市第一附属医院"/>
+    </div>
+    <div class="input-group" style="text-align: center">
+            <span class="input-group-addon">科室：</span>
+            <input id="room" style="width:180px;margin:5px" type="text" class="form-control" placeholder="内科"/>
+    </div>
+    <br/><center>
+    <div class="btn-group">
+        <button id='btn' type="button" class="btn btn-default">确定修改</button>
+    </div></center>
+    
+    
+</body>
+<script src="../js/jquery-1.11.0.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/public.js"></script>
+<script>
+    $(function() {
+        var loc = location.href;//获取整个跳转地址内容，其实就是你传过来的整个地址字符串
+        console.log("我的地址"+loc);
+        var n1 = loc.length;//地址的总长
+        var n2 = loc.indexOf("?");//取得=号的位置
+        var parameter = decodeURI(loc.substr(n2+1, n1-n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
+        var parameters  = parameter.split("&");//从&处拆分，返回字符串数组
+        console.log("参数列表"+parameters);
+        var paValue = new Array();//创建一个用于保存具体值得数组
+        for (var i = 0; i < parameters.length; i++) {
+            console.log("参数键值对值"+i+":"+parameters[i]);
+            var m1 = parameters[i].length;//获得每个键值对的长度
+            var m2 = parameters[i].indexOf("=");//获得每个键值对=号的位置
+            var value = parameters[i].substr(m2+1, m1-m2);//获取每个键值对=号后面具体的值
+            paValue[i] = value;
+            console.log(paValue[0],paValue[1]);
+        }
+        $('#btn').click(function(){
+            var temp=JSON.stringify({
+                systemId:paValue[0],
+                province:$("#province").val(),
+                city:$("#city").val(),
+                hospital:$("#hospital").val(),
+                room:$("#room").val(),
+            })
+            console.log(temp)       
+            var host = getHost();
+            $.ajax({
+                url: host + "/info-update",
+                type:"put",
+                dataType: "JSON",
+                data: temp,
+                headers:{token:paValue[1]},
+                contentType:'application/json',    
+                        // 这里把表单里面的数据放在这里传到后台
+                error:function(res){
+                    console.log(res.data);
+                    alert("error")
+                }  ,
+                success:function(res){
+                    alert("修改成功！")
+                    setTimeout(() => {
+                        window.close();
+                    }, 300);
+                    
+                }
+            })
+        })
+    })
+</script>
+</html>

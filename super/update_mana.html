@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <link href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+</head>
+<body style="margin: 30px">
+     
+         <div class="input-group" style="text-align: center">
+                <span class="input-group-addon">账号：</span>
+                <input id='userId' style="width:180px;margin:5px;" type="text" class="form-control" placeholder="6位的编号"/>
+        </div>
+                
+        <div class="input-group" style="text-align: center">
+            <span class="input-group-addon">用户名：</span>
+            <input id='userName' style="width:180px;margin:5px" type="text" class="form-control" placeholder="姓名："/>
+        </div>
+        <div class="input-group" style="text-align: center">
+                <span class="input-group-addon">密码：</span>
+                <input id="userPassword" style="width:180px;margin:5px" type="text" class="form-control" placeholder="默认密码是123456"/>
+        </div>
+        <br/><center>
+        <div class="btn-group">
+            <button id="button" type="button" class="btn btn-default">确定</button>
+        </div></center>
+
+</body>
+<script src="../js/jquery-1.11.0.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/public.js"></script>
+<script>
+    var host = getHost();
+     $(function() {
+            var loc = location.href;//获取整个跳转地址内容，其实就是你传过来的整个地址字符串
+            console.log("我的地址"+loc);
+            var n1 = loc.length;//地址的总长
+            var n2 = loc.indexOf("?");//取得=号的位置
+            var parameter = decodeURI(loc.substr(n2+1, n1-n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
+            var parameters  = parameter.split("&");//从&处拆分，返回字符串数组
+            console.log("参数列表"+parameters);
+            var paValue = new Array();//创建一个用于保存具体值得数组
+            for (var i = 0; i < parameters.length; i++) {
+                console.log("参数键值对值"+i+":"+parameters[i]);
+                var m1 = parameters[i].length;//获得每个键值对的长度
+                var m2 = parameters[i].indexOf("=");//获得每个键值对=号的位置
+                var value = parameters[i].substr(m2+1, m1-m2);//获取每个键值对=号后面具体的值
+                paValue[i] = value;
+            }
+            console.log("paValue[0] : " + paValue[0]);
+            var temp=JSON.stringify({
+                systemId: paValue[0],
+                userPassword: "",
+                userName: "",
+                userId: ""
+            })
+            $.ajax({
+                    url: host + "/manager-part",
+                    type:"POST",
+                    dataType: "JSON",
+                    data:temp,
+                    headers:{token:paValue[1]},
+                    contentType:'application/json',    
+                    // 这里把表单里面的数据放在这里传到后台
+                    error:function(res){
+                        console.log(res.data);
+                        alert("error")
+                    },
+                    success:function(res){
+                        var textarea = document.querySelectorAll("input[type=text]");
+                        var data1 = new Array();
+                        data1[0] = res.data[0].userId;
+                        data1[1] = res.data[0].userName;
+                        data1[2] = res.data[0].userPassword;
+                        for(var i = 0,o;o = textarea[i];i++){
+                            o.value = data1[i];
+                        }
+                    }
+                })
+
+
+
+            $("#button").click(function () {
+                var data=JSON.stringify({
+                    systemId:paValue[0],
+                    userPassword:$("#userPassword").val(),
+                    userId:$("#userId").val(),
+                    userName:$("#userName").val(),
+                })
+        
+      
+                $.ajax({
+                    url: host + "/manager",
+                    type: "put",
+                    dataType: "JSON",
+                    data:data,
+                    headers:{token:paValue[1]},
+                    contentType:'application/json',    
+                            // 这里把表单里面的数据放在这里传到后台
+                    error:function(res){
+                        console.log(res.data);
+                        alert("error")
+                    }  ,
+                    success:function(res){
+                        alert("修改成功！")
+                        setTimeout(() => {
+                            window.close();
+                        }, 300);
+                        
+                    }
+                })
+
+
+        })
+
+    })
+</script>
+</html>
